@@ -1,12 +1,16 @@
-<import name="new_normal" src="./new_normal.ux"></import>
 <import name="new_pic" src="./new_pics.ux"></import>
- 
+ <import name="new_video" src="./new_video.ux"></import>
+  
  
 <template>
     <list class="tutorial-page" onscrollbottom="renderMoreListItem">
         <block for="productList">
             <list-item type="new_pic" class="content-item" if="{{$item.type===0}}" onclick="clickNew($idx)">
                 <new_pic title={{$item.title}} pics={{$item.pics}} source={{$item.source}} comments={{$item.comments}} timestamp={{$item.timestamp}} read={{$item.read}}></new_pic>
+                <div class="divider" if="{{$idx >= 0 && $idx < productList.length - 1}}"></div>
+            </list-item>
+            <list-item type="new_video" class="content-item" if="{{$item.type===1}}" onclick="clickNew($idx)">
+                <new_video video={{$item.video}} source={{$item.source}} comments={{$item.comments}} timestamp={{$item.timestamp}} read={{$item.read}} poster={{$item.poster}} onclick="clickVideo" showCover=true></new_video>
                 <div class="divider" if="{{$idx >= 0 && $idx < productList.length - 1}}"></div>
             </list-item>
         </block>
@@ -20,7 +24,7 @@
 </template>
 <style>
 .divider {
-  width: 100%;
+  flex: 1;
   height: 1px;
   margin-left: 16px;
   margin-right: 16px;
@@ -34,7 +38,7 @@
 
 <script>
 import { fetchNewsData } from '../mock.js'
-
+import router from '@system.router'
 // 内存中存储的列表数据
 let memList = []
 
@@ -52,9 +56,31 @@ export default {
         this.loadAndRender()
         console.info('oninit ')
     },
+    onHide() {
+        console.info('onhide')
+        this.$app.$def.pauseVideoPlayer()
+    },
+    onBackPress() {
+        console.info(`触发：onBackPress`);
+    },
     clickNew(index) {
-        this.productList[index].read = true
-        console.info('click ', index)
+        let item = this.productList[index]
+        item.read = true
+        console.info('click ', index, item.type)
+        if (item.type === 0) {
+            router.push({
+                uri: '/Detail',
+                params: {
+                    url: item.jump
+                }
+            })
+        } else if (item.type === 1) {
+            //play video
+
+        }
+    },
+    clickVideo(evt) {
+        console.info('clickvideo ', JSON.stringify(evt))
     },
     /**
      * 请求并渲染

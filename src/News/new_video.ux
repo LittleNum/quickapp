@@ -1,0 +1,112 @@
+<import name="new_base" src="./base_new.ux"></import>
+<template>
+    <new_base source={{source}} comments={{comments}} timestamp={{timestamp}} read={{read}}>
+        <div class="columrn">
+            <video id="video" class="video-player" controls=false autoplay=false src={{video}} poster={{poster}} onstart="videoStart" 
+            onprepared="videoStart" ondisappear="disappear" onappear="appear" ontouchstart="touchStart" onfinish="onfinish" onerror="onerror"></video>
+            <div class="control" onclick="clickControl" if="{{showCover}}">
+                <image class="play" src="{{getCover()}}" onclick="toggleVideo">
+                </image>
+            </div>
+        </div>
+    </new_base>
+</template>
+<script>
+
+export default {
+    props: {
+        poster: String,
+        video: String,
+        source: String,
+        comments: Number,
+        timestamp: Number,
+        read: Boolean,
+        autoPlayAppear: Boolean,
+        showCover: Boolean
+    },
+    data: {
+        isPlaying: false,
+        showCover: true
+    },
+    videoStart() {
+
+    },
+    getCover() {
+        console.info('getCover')
+        return this.isPlaying ? '/Common/pause.jpg' : '/Common/play.jpg'
+    },
+    toggleVideo() {
+        let video = this.$element('video')
+        console.info(this.isPlaying)
+        if (this.isPlaying) {
+            this.$app.$def.pauseVideo(video)
+        } else {
+            this.$app.$def.startVideo(video)
+        }
+        this.isPlaying = !this.isPlaying
+        this.$app.$data.isVideoPlaying = this.isPlaying
+        setTimeout(() => {
+            this.showCover = false
+        }, 500)
+    },
+    onfinish() {
+        console.info('onfinish')
+        this.$app.$data.isVideoPlaying = false
+        this.showCover = true
+        this.isPlaying = false
+    },
+    onerror() {
+    },
+    appear() {
+        if (this.autoPlayAppear) {
+            let player = this.$app.$data.video
+            if (player && this.$app.$data.isVideoPlaying) {
+                return
+            }
+            if (!this.isPlaying) {
+                this.toggleVideo()
+            }
+        }
+    },
+    disappear() {
+        console.info('disappear ', this.isPlaying)
+        if (this.isPlaying) {
+            this.$app.$def.pauseVideo(this.$element('video'))
+            this.isPlaying = false
+            this.$app.$data.isVideoPlaying = false
+        }
+        this.showCover = true
+    },
+    touchStart() {
+        this.showCover = true
+    },
+    clickControl() {
+        this.showCover = false
+    }
+}
+</script>
+<style>
+.columrn {
+  flex-direction: column;
+  width: 100%;
+}
+.video-player {
+  flex: 1;
+  width: 100%;
+  height: 320px;
+  background-color: #000000;
+}
+.control {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 320px;
+  margin-top: -320px;
+}
+.play {
+  width: 72px;
+  height: 72px;
+}
+</style>
+

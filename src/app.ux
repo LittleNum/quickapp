@@ -10,6 +10,8 @@ import { fetchNewsData } from './mock.js'
 export default {
     showMenu: util.showMenu,
     createShortcut: util.createShortcut,
+    videoPlayer: null,
+    isVideoPlaying: false,
     onCreate() {
         proxy.parseProxy()
         proxy.bindPageLC()
@@ -22,6 +24,28 @@ export default {
         // }
         // testAsync()
     },
-
+    startVideo(player) {
+        console.info('startVideo ', player)
+        if (this.videoPlayer) {
+            if (player != this.videoPlayer) {
+                this.videoPlayer.pause()
+            }
+        }
+        if (player) {
+            this.videoPlayer = player
+            console.info('startVideo start ', player.start)
+            player.start()
+            this.isVideoPlaying = true
+        }
+    },
+    pauseVideo(player) {
+        if (player) {
+            player.pause()
+        } else if (this.videoPlayer) {
+            this.videoPlayer.pause()
+        }
+        this.videoPlayer = null
+        this.isVideoPlaying = false
+    }
 }
 </script>

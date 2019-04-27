@@ -1,0 +1,14 @@
+<template>
+    <web src={{url}}></web>
+</template>
+<script>
+export default {
+    data: {
+        url: ''
+    },
+    onInit() {
+        console.info('url ',this.url)
+    },
+}
+</script>
+

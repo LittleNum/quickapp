@@ -1,9 +1,9 @@
 <template>
-    <div class="container" style="background-color:{{getColor(0,read)}}" onclick="clickNew">
+    <div class="container" style="background-color:{{getColor(0,read)}}">
         <slot></slot>
         <div class="row-contain">
             <text class="tag" style="color:{{ titlenormal}}" if="{{source && source.length>0}}">{{getSource()}}</text>
-            <text class="tag" style="color:{{ titlenormal}}" if="{{comments && comments >= 0}}">{{getComments()}}条评论</text>
+            <text class="tag" style="color:{{ titlenormal}}" if="{{comments && comments >= 0}}">{{getComments()}}评论</text>
             <text class="tag" style="color:{{ titlenormal}}" if="{{isTimeValid()}}">{{getTime()}}</text>
         </div>
     </div>

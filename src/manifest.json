@@ -29,6 +29,9 @@
     "pages": {
       "Home": {
         "component": "home"
+      },
+      "Detail": {
+        "component": "detail"
       }
     }
   },
