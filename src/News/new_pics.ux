@@ -1,0 +1,50 @@
+<import name="base_new" src="./base_new.ux"></import>
+ 
+<template>
+    <base_new source={{source}} comments={{comments}} timestamp={{timestamp}} read={{read}}>
+        <div class="vertical">
+            <text class="titletext" style="color:{{getColor(1, read)}}" lines=2 if="{{title && title.length > 0}}">{{title}}</text>
+            <div class="pic-contain">
+                <image class="pic" if="{{pics && pics.length>0}}" src="{{pics && pics.length>0 && pics[0]}}"></image>
+                <image class="pic" if="{{pics && pics.length>1}}" src="{{pics && pics.length>1 && pics[1]}}"></image>
+                <image class="pic" if="{{pics && pics.length>2}}" src="{{pics && pics.length>2 && pics[2]}}"></image>
+            </div> -->
+        </div>
+    </base_new>
+</template>
+<script>
+import { getColor } from './getcolor.js'
+
+export default {
+    props: {
+        title: String,
+        pics: Array,
+        source: String,
+        comments: Number,
+        timestamp: Number,
+        read: Boolean
+    },
+    getColor
+}
+</script>
+
+<style>
+.vertical {
+  flex-direction: column;
+  width: 100%;
+}
+.titletext {
+  font-size: 32px;
+}
+.pic-contain {
+  width: 100%;
+  flex-direction: row;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  justify-content: space-around;
+}
+.pic {
+  height: 144px;
+  width: 144px;
+}
+</style>

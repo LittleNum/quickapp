@@ -1,0 +1,57 @@
+<import name="tab-item" src="./tabitem.ux"></import>
+<import name="news" src="../News/news.ux"></import>
+  
+
+<template>
+    <div class="home">
+        <tabs onchange="changeTab" index={{tab}}>
+            <tab-content class="tab-content" scrollable=true>
+                <news></news>
+                <text>ssfdaf</text>
+                <text>ewrqwrwqrwq</text>
+            </tab-content>
+            <tab-bar mode="fixed" class="tab-bar">
+                <tab-item index={{0}} title="资讯" current-index={{tab}} left-divider={{false}} right-divider={{true}}></tab-item>
+                <tab-item index={{1}} title="攻略" current-index={{tab}} left-divider={{true}} right-divider={{true}}></tab-item>
+                <tab-item index={{2}} title="礼包" current-index={{tab}} left-divider={{true}} right-divider={{false}}></tab-item>
+            </tab-bar>
+        </tabs>
+    </div>
+</template>
+<script>
+export default {
+    onInit() {
+        console.info('oninit')
+    },
+    data: {
+        currentIndex: 0,
+        tab: 0
+    },
+    changeTab(evt) {
+        let index = evt.index
+
+        // this.currentIndex = evt.index
+        this.tab = index
+        console.info('onchange ', this.tab)
+    }
+}
+</script>
+
+<style>
+.home {
+  flex-direction: column;
+}
+.tab-bar-item {
+  flex-grow: 1;
+}
+.tab-bar {
+  height: 120px;
+  border: 0px solid #eeeeee;
+  border-bottom-width: 1px;
+  align-items: center;
+}
+.tab-content {
+  flex-grow: 1;
+  flex-direction: column;
+}
+</style>

@@ -1,0 +1,27 @@
+<script>
+/**
+* 应用级别的配置，供所有页面公用
+*/
+import util from './util'
+import inject from './inject/inject.js'
+import proxy from './inject/proxy.js'
+import { fetchNewsData } from './mock.js'
+
+export default {
+    showMenu: util.showMenu,
+    createShortcut: util.createShortcut,
+    onCreate() {
+        proxy.parseProxy()
+        proxy.bindPageLC()
+
+        // function testAsync() {
+        //     async function f1() {
+        //         console.info('fetchNewsData  ', JSON.stringify(await fetchNewsData()))
+        //     }
+        //     f1()
+        // }
+        // testAsync()
+    },
+
+}
+</script>

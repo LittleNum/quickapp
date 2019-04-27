@@ -1,0 +1,98 @@
+<template>
+    <div class="tab-contain" style="background-color:{{bgColor}}" onclick="clickTab">
+        <div class="divider" if={{leftDivider}}></div>
+        <div class="tab-item">
+            <image class="icon" src="/Common/logo.png"></image>
+            <text class="title" style="color:{{titleColor}}">{{title}}</text>
+        </div>
+        <div class="divider" if={{rightDivider}}></div>
+    </div>
+</template>
+<script>
+const normalBg = '#FFFACD'
+const selectBg = '#FFD39B'
+const titleNormalColor = '#FF3030'
+const titleSelectColor = '#FFEFD5'
+export default {
+    props: {
+        index: Number,
+        currentIndex: Number,
+        itemData: String,
+        title: String,
+        icon: String,
+        leftDivider: Boolean,
+        rightDivider: Boolean
+    },
+    data: {
+        bgColor: normalBg,
+        titleColor: titleNormalColor,
+    },
+    onInit() {
+        console.info('hello')
+        console.info(this.title, this.index, this.currentIndex, this.currentIndex == this.index)
+        this._changeStyle()
+        this.$watch('currentIndex', 'currentIndexChange')
+    },
+    onReady() {
+        console.info('onready')
+    },
+    onShow() {
+        console.info('onshow')
+    },
+    onHide() {
+        console.info('onhide')
+    },
+    currentIndexChange(newValue, oldValue) {
+        if (newValue == oldValue) {
+            return
+        }
+        console.info('index=', this.index, ' current=', this.currentIndex)
+        this._changeStyle()
+    },
+    _changeStyle() {
+        if (this.currentIndex == this.index) {
+            this.bgColor = selectBg
+            this.titleColor = titleSelectColor
+        } else {
+            this.bgColor = normalBg
+            this.titleColor = titleNormalColor
+        }
+    },
+    clickTab() {
+        console.info('clicktab ', this.index)
+    }
+}
+</script>
+
+<style>
+.tab-contain {
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  flex-grow: 1;
+}
+.tab-item {
+  flex: 1;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+.icon {
+  width: 48px;
+  height: 48px;
+}
+.title {
+  margin-top: 8px;
+  font-size: 24px;
+}
+.divider {
+  width: 0.5px;
+  height: 80%;
+  align-items: center;
+  background-color: #ff0000;
+}
+</style>
+

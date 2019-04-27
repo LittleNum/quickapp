@@ -1,0 +1,25 @@
+<template>
+    <div class="home">
+        <tabs>
+            <tab-content class="tab-content">
+            </tab-content>
+            <tab-bar mode="scrollable">
+                <text class="tab-bar-item">咨询</text>
+                <text class="tab-bar-item">攻略</text>
+                <text class="tab-bar-item">礼包</text>
+            </tab-bar>
+        </tabs>
+    </div>
+</template>
+<style>
+.home {
+  flex-direction: column;
+}
+.tab-bar-item {
+  flex-grow: 1;
+}
+.tab-content {
+  flex-grow: 1;
+  flex-direction: column;
+}
+</style>

@@ -1,0 +1,83 @@
+<template>
+    <div class="container" style="background-color:{{getColor(0,read)}}" onclick="clickNew">
+        <slot></slot>
+        <div class="row-contain">
+            <text class="tag" style="color:{{ titlenormal}}" if="{{source && source.length>0}}">{{getSource()}}</text>
+            <text class="tag" style="color:{{ titlenormal}}" if="{{comments && comments >= 0}}">{{getComments()}}条评论</text>
+            <text class="tag" style="color:{{ titlenormal}}" if="{{isTimeValid()}}">{{getTime()}}</text>
+        </div>
+    </div>
+</template>
+<script>
+import {getColor} from './getcolor.js'
+
+export default {
+    props: {
+        source: String,
+        comments: Number,
+        timestamp: Number,
+        read: Boolean
+    },
+    getColor,
+    getSource() {
+        if (this.source && this.source.length > 8) {
+            return this.source.splice(0, 7)
+        }
+        return this.source
+    },
+    getComments() {
+        if (this.comments && this.comments > 0) {
+            if (this.comments > 1000) {
+                return '999+'
+            }
+            return this.comments
+        }
+        return 0
+    },
+    isTimeValid() {
+        let nowdate = new Date()
+        let time = new Date(this.timestamp)
+        return nowdate > time
+    },
+    getTime() {
+        if (this.timestamp && this.timestamp > 0) {
+            let nowdate = new Date()
+            let time = new Date(this.timestamp)
+            let now = nowdate.getTime()
+
+            if (nowdate > time) {
+                let diff = now - this.timestamp
+                let days = Math.floor(diff / 1000 / 60 / 60 / 24)
+                if (days == 0) {
+                    if (diff < 3 * 60 * 1000) {
+                        return '刚刚'
+                    }
+                    if (diff < 60 * 60 * 1000) {
+                        return parseInt(diff / 1000 / 60) + '分钟前'
+                    }
+                    return parseInt(diff / 1000 / 60 / 60) + '小时前'
+                } else {
+                    return days + '天前'
+                }
+            }
+            return ''
+        }
+    }
+}
+</script>
+<style>
+.container {
+  flex-direction: column;
+  padding: 16px;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.row-contain {
+  flex-direction: row;
+}
+.tag {
+  font-size: 22px;
+  margin: 8px;
+}
+</style>
+

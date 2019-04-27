@@ -1,0 +1,108 @@
+<import name="new_normal" src="./new_normal.ux"></import>
+<import name="new_pic" src="./new_pics.ux"></import>
+ 
+ 
+<template>
+    <list class="tutorial-page" onscrollbottom="renderMoreListItem">
+        <block for="productList">
+            <list-item type="new_pic" class="content-item" if="{{$item.type===0}}" onclick="clickNew($idx)">
+                <new_pic title={{$item.title}} pics={{$item.pics}} source={{$item.source}} comments={{$item.comments}} timestamp={{$item.timestamp}} read={{$item.read}}></new_pic>
+                <div class="divider" if="{{$idx >= 0 && $idx < productList.length - 1}}"></div>
+            </list-item>
+        </block>
+
+        <!-- <list-item type="loadStatus" class="load-status">
+            <progress type="circular" show="{{hasMoreData}}"></progress>
+            <text show="{{hasMoreData}}">加载更多</text>
+            <text show="{{!hasMoreData}}">没有更多了~</text>
+        </list-item> -->
+    </list>
+</template>
+<style>
+.divider {
+  width: 100%;
+  height: 1px;
+  margin-left: 16px;
+  margin-right: 16px;
+  background-color: #e5e5e5;
+}
+.content-item {
+  flex-direction: column;
+}
+</style>
+
+
+<script>
+import { fetchNewsData } from '../mock.js'
+
+// 内存中存储的列表数据
+let memList = []
+
+export default {
+    data: {
+        productList: [],
+        hasMoreData: true,
+        // 每次渲染的商品数
+        size: 10,
+        // 是否正在fetch请求数据
+        isLoadingData: false,
+        clickIndex: -1
+    },
+    onInit() {
+        this.loadAndRender()
+        console.info('oninit ')
+    },
+    clickNew(index) {
+        this.productList[index].read = true
+        console.info('click ', index)
+    },
+    /**
+     * 请求并渲染
+     */
+    loadAndRender(doRender = true) {
+        async function f1() {
+            this.isLoadingData = true
+            // 重新请求数据并根据模式判断是否需要渲染列表
+            const resList = await fetchNewsData()
+            console.info('loadAndRender ', JSON.stringify(resList))
+            this.isLoadingData = false
+            if (!resList) {
+                console.error(`数据请求错误`)
+            } else if (!resList.length) {
+                this.hasMoreData = false
+            } else {
+                memList = memList.concat(resList)
+                if (doRender) {
+                    this._renderList()
+                }
+            }
+        }
+        f1.bind(this)()
+    },
+    _renderList() {
+        // 渲染列表
+        if (memList.length > 0) {
+            let list = memList.splice(0, this.size)
+            if (list && list.length > 0) {
+                let tmp = list.map(item => Object.assign(item, {
+                    read: false
+                }))
+                this.productList = this.productList.concat(tmp)
+                console.info('_renderList ', JSON.stringify(this.productList))
+            }
+        }
+        if (memList.length <= this.size) {
+            // 提前请求新的数据
+            // this.loadAndRender(false)
+        }
+    },
+    /**
+     * 滑动到底部时加载更多
+     */
+    renderMoreListItem() {
+        if (!this.isLoadingData) {
+            this._renderList()
+        }
+    }
+}
+</script>
